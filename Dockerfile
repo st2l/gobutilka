@@ -10,8 +10,6 @@ RUN apk add --no-cache git
 # Copy go.mod and go.sum files
 COPY go.mod go.sum ./
 
-RUN sed -i 's/go 1.24.2/go 1.21/' go.mod
-
 # Download dependencies
 RUN go mod download
 
@@ -30,7 +28,7 @@ WORKDIR /app
 # Install ca-certificates for HTTPS connections
 RUN apk --no-cache add ca-certificates tzdata
 
-# Create content directory
+# Create content directory with proper permissions
 RUN mkdir -p /app/content
 
 # Copy the binary from builder stage
@@ -39,9 +37,14 @@ COPY --from=builder /app/vk_butilka /app/vk_butilka
 # Copy .env file if it exists (will be overridden by environment variables if provided)
 COPY .env* /app/
 
-# Set user for security
+# Create user but make the content directory accessible
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-RUN chown -R appuser:appgroup /app
+# Important: Change ownership of all app files EXCEPT the content directory
+RUN chown -R appuser:appgroup /app/vk_butilka /app/.env*
+# Create the content directory with 777 permissions so anyone can write to it
+RUN chmod 777 /app/content
+
+# Set user for security
 USER appuser
 
 # Set environment variables (can be overridden at runtime)
