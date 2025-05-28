@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  vk_butilka:
+    build: .
+    container_name: vk_butilka
+    restart: unless-stopped
+    environment:
+      - VK_ACCOUNT_TOKEN=${VK_ACCOUNT_TOKEN}
+      - appID=${appID}
+      - ownerID=${ownerID}
+      - CONTENT_DIR=/app/content
+      - DONUT_FREQUENCY=${DONUT_FREQUENCY:-5}
+      - POST_INTERVAL_HOURS=${POST_INTERVAL_HOURS:-3}
+      - DONUT_DURATION=${DONUT_DURATION:--1}
+      - CONTENT_PER_POST=${CONTENT_PER_POST:-5}
+    volumes:
+      - ./content:/app/content
