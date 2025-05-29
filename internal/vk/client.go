@@ -16,7 +16,7 @@ func NewClient(appID, ownerID, token string) *Client {
 }
 
 // WallPost creates a new wall post with optional message, photos, and videos
-func (c *Client) WallPost(message string, photos, videos []string, donutPaidDuration ...string) error {
+func (c *Client) WallPost(message string, photos, videos []string, donutPaidDuration string) error {
 	attachments := []string{}
 
 	// Upload photos if any
@@ -44,5 +44,5 @@ func (c *Client) WallPost(message string, photos, videos []string, donutPaidDura
 	// Post to wall
 	attachmentsStr := strings.Join(attachments, ",")
 	log.Printf("Posting to wall with attachments: %s", attachmentsStr)
-	return c.postToWall(message, attachmentsStr, donutPaidDuration[0])
+	return c.postToWall(message, attachmentsStr, donutPaidDuration)
 }

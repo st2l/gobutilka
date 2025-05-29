@@ -69,7 +69,7 @@ func makePost(client *vk.Client, manager *content.ContentManager) {
 	if useDonut {
 		postErr = client.WallPost(message, photos, videos, donutDuration)
 	} else {
-		postErr = client.WallPost(message, photos, videos)
+		postErr = client.WallPost(message, photos, videos, "")
 	}
 
 	if postErr != nil {
