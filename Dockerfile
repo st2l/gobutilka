@@ -37,16 +37,6 @@ COPY --from=builder /app/vk_butilka /app/vk_butilka
 # Copy .env file if it exists (will be overridden by environment variables if provided)
 COPY .env* /app/
 
-# Create user but make the content directory accessible
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-# Important: Change ownership of all app files EXCEPT the content directory
-RUN chown -R appuser:appgroup /app/vk_butilka /app/.env*
-# Create the content directory with 777 permissions so anyone can write to it
-RUN chmod 777 /app/content
-
-# Set user for security
-USER appuser
-
 # Set environment variables (can be overridden at runtime)
 ENV CONTENT_DIR="/app/content"
 ENV DONUT_FREQUENCY="5"
@@ -54,5 +44,5 @@ ENV POST_INTERVAL_HOURS="3"
 ENV DONUT_DURATION="-1"
 ENV CONTENT_PER_POST="5"
 
-# Command to run
+# Command to run (will run as root)
 CMD ["/app/vk_butilka"]
